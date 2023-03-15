@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/topklabs/rapi/internal/logging"
 	"github.com/topklabs/rapi/pkg/proxy"
-	"log"
 	"net/http"
 )
 
@@ -14,10 +14,13 @@ func main() {
 
 	cfg, err := proxy.GetConfig()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
+	logger := logging.DefaultLogger()
+	ctx = logging.NewContext(ctx, logger)
+
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), proxy.NewProxy(ctx, cfg)); err != nil && err != context.Canceled {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 }
