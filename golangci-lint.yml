@@ -1,0 +1,78 @@
+# All possible options can be found here https://github.com/golangci/golangci-lint/blob/master/.golangci.reference.yml
+
+run:
+  timeout: 1m
+
+# This file contains only configs which differ from defaults.
+linters-settings:
+
+  errcheck:
+    check-type-assertions: true
+
+  gocritic:
+    # Settings passed to gocritic.
+    # The settings key is the name of a supported gocritic checker.
+    # The list of supported checkers can be find in https://go-critic.github.io/overview.
+    settings:
+      captLocal:
+        # Whether to restrict checker to params only.
+        # Default: true
+        paramsOnly: false
+      underef:
+        # Whether to skip (*x).method() calls where x is a pointer receiver.
+        # Default: true
+        skipRecvDeref: false
+
+  govet:
+    # Enable all analyzers.
+    # Default: false
+    enable-all: true
+    # Disable analyzers by name.
+    # Run `go tool vet help` to see all analyzers.
+    # Default: []
+    disable:
+      - fieldalignment # too strict
+    # Settings per analyzer.
+    settings:
+      shadow:
+        # Whether to be strict about shadowing; can be noisy.
+        # Default: false
+        strict: true
+
+  nakedret:
+    # Make an issue if func has more lines of code than this setting, and it has naked returns.
+    max-func-lines: 0
+
+  tenv:
+    # The option `all` will run against whole test files (`_test.go`) regardless of method/function signatures.
+    # Otherwise, only methods that take `*testing.T`, `*testing.B`, and `testing.TB` as arguments are checked.
+    all: true
+
+linters:
+  disable-all: true
+  enable:
+    ## enabled by default
+    - errcheck # checking for unchecked errors, these unchecked errors can be critical bugs in some cases
+    - gosimple # specializes in simplifying a code
+    - govet # reports suspicious constructs, such as Printf calls whose arguments do not align with the format string
+    - ineffassign # detects when assignments to existing variables are not used
+    - staticcheck # is a go vet on steroids, applying a ton of static analysis checks
+    - typecheck # like the front-end of a Go compiler, parses and type-checks Go code
+    - unused # checks for unused constants, variables, functions and types
+    ## disabled by default
+    - bodyclose # checks whether HTTP response body is closed successfully
+    - exhaustive # checks exhaustiveness of enum switch statements
+    - exportloopref # checks for pointers to enclosing loop variables
+    - forbidigo # forbids identifiers
+    - goconst # finds repeated strings that could be replaced by a constant
+    # - gocritic # provides diagnostics that check for bugs, performance and style issues
+    - gocyclo # computes and checks the cyclomatic complexity of functions
+    - godot # checks if comments end in a period
+    - goimports # in addition to fixing imports, goimports also formats your code in the same style as gofmt
+    - whitespace # detects leading and trailing whitespace
+    - gofumpt # [replaced by goimports, gofumports is not available yet] checks whether code was gofumpt-ed
+
+issues:
+
+  # Show only new issues: if there are unstaged changes or untracked files.
+  new: false
